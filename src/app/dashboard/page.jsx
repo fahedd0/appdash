@@ -83,14 +83,14 @@ export default function DashboardPage() {
     },
     { 
       id: 2, 
-      title: "New quote created for John Smith", 
+      title: "New quote created for User1", 
       time: "2 hours ago", 
       type: "quote",
       icon: FileText
     },
     { 
       id: 3, 
-      title: "Payment received from Emma Johnson", 
+      title: "Payment received from User2", 
       time: "3 hours ago", 
       type: "payment",
       icon: CreditCard

@@ -19,8 +19,8 @@ export default function Sidebar({
   
   // Animation variants
   const sidebarVariants = {
-    expanded: { width: 280 },
-    collapsed: { width: 80 }
+    expanded: { width: 240 },
+    collapsed: { width: 70 }
   };
   
   const logoTextVariants = {
@@ -102,13 +102,13 @@ export default function Sidebar({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-6 px-3">
+        <nav className="flex-1 overflow-y-auto py-5 px-2">
           {navigationConfig.map((section, sectionIndex) => (
-            <div key={sectionIndex} className="mb-6">
+            <div key={sectionIndex} className="mb-5">
               {section.title && (
                 <motion.h3 
                   variants={itemTextVariants}
-                  className="px-4 mb-2 text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider"
+                  className="px-3 mb-2 text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider"
                 >
                   {section.title}
                 </motion.h3>
@@ -126,7 +126,7 @@ export default function Sidebar({
                       <Link 
                         href={item.href}
                         className={`
-                          group flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          group flex items-center px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200
                           ${isActive 
                             ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-600 dark:from-blue-900/30 dark:to-indigo-900/30 dark:text-blue-400' 
                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}
@@ -136,11 +136,11 @@ export default function Sidebar({
                           ${isActive 
                             ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400' 
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}
-                          p-2 rounded-lg mr-3 transition-colors duration-200
+                          p-1.5 rounded-lg mr-2.5 transition-colors duration-200
                         `}>
-                          <item.icon size={18} />
+                          <item.icon size={16} />
                         </div>
-                        <motion.span variants={itemTextVariants}>
+                        <motion.span variants={itemTextVariants} className="text-sm">
                           {item.name}
                         </motion.span>
                         

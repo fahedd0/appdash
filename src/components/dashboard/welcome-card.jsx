@@ -5,8 +5,8 @@ import { LogOut } from 'lucide-react';
 
 export default function WelcomeCard() {
   const router = useRouter();
-  const [user, setUser] = useState(null); // initially null
-  const [isClient, setIsClient] = useState(false); // flag for client-side only
+  const [user, setUser] = useState(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -18,11 +18,10 @@ export default function WelcomeCard() {
 
   const handleSignOut = () => {
     localStorage.removeItem('user');
-    router.push('/login');
-    window.location.reload();
+    window.location.href = '/login'; // full reload to reset UI
   };
 
-  if (!isClient || !user) return null; // wait for client + user data
+  if (!isClient || !user) return null;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
@@ -36,7 +35,6 @@ export default function WelcomeCard() {
             <p className="text-sm text-gray-600 dark:text-gray-400">{user.role}</p>
           </div>
         </div>
-
         <button
           onClick={handleSignOut}
           className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"

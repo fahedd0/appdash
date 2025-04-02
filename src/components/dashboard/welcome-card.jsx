@@ -1,10 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 
 export default function WelcomeCard() {
-  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isClient, setIsClient] = useState(false);
 
@@ -12,7 +10,12 @@ export default function WelcomeCard() {
     setIsClient(true);
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Failed to parse user data:", e);
+        localStorage.removeItem('user'); // Clean up invalid data
+      }
     }
   }, []);
 
@@ -21,7 +24,15 @@ export default function WelcomeCard() {
     window.location.href = '/login'; // full reload to reset UI
   };
 
-  if (!isClient || !user) return null;
+  // Don't render anything during SSR to prevent hydration errors
+  if (!isClient) return null;
+
+  // Also handle missing user data
+  if (!user) return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+      <p className="text-gray-600 dark:text-gray-400">Please log in to see dashboard content.</p>
+    </div>
+  );
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
@@ -32,7 +43,7 @@ export default function WelcomeCard() {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Welcome</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{user.role}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{user.role || 'User'}</p>
           </div>
         </div>
         <button

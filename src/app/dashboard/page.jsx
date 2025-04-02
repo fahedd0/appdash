@@ -32,7 +32,7 @@ export default function DashboardPage() {
   if (!isClient) return null;
   if (!user) return null; // wait for user to load
 
-  // Stats data for the dashboard
+  // Stats data for the dashboard with professional blue color scheme
   const stats = [
     {
       title: "Total Revenue",
@@ -40,8 +40,8 @@ export default function DashboardPage() {
       change: "+12.5%",
       trend: "up",
       icon: DollarSign,
-      gradient: "from-emerald-400 to-teal-500",
-      shadowColor: "shadow-emerald-200 dark:shadow-emerald-900/30"
+      gradient: "from-blue-600 to-blue-700",
+      shadowColor: "shadow-blue-200 dark:shadow-blue-900/30"
     },
     {
       title: "New Customers",
@@ -49,8 +49,8 @@ export default function DashboardPage() {
       change: "+8.2%",
       trend: "up",
       icon: Users,
-      gradient: "from-blue-400 to-violet-500",
-      shadowColor: "shadow-blue-200 dark:shadow-blue-900/30"
+      gradient: "from-indigo-600 to-indigo-700",
+      shadowColor: "shadow-indigo-200 dark:shadow-indigo-900/30"
     },
     {
       title: "Active Policies",
@@ -58,8 +58,8 @@ export default function DashboardPage() {
       change: "+3.4%",
       trend: "up",
       icon: LineChart,
-      gradient: "from-purple-400 to-pink-500",
-      shadowColor: "shadow-purple-200 dark:shadow-purple-900/30"
+      gradient: "from-blue-500 to-indigo-600",
+      shadowColor: "shadow-blue-200 dark:shadow-blue-900/30"
     },
     {
       title: "Pending Quotes",
@@ -67,8 +67,8 @@ export default function DashboardPage() {
       change: "-5.1%",
       trend: "down",
       icon: BarChart3,
-      gradient: "from-amber-400 to-orange-500",
-      shadowColor: "shadow-amber-200 dark:shadow-amber-900/30"
+      gradient: "from-indigo-500 to-blue-600",
+      shadowColor: "shadow-indigo-200 dark:shadow-indigo-900/30"
     },
   ];
 
@@ -104,22 +104,22 @@ export default function DashboardPage() {
     }
   ];
 
-  // Quick actions for the dashboard
+  // Quick actions for the dashboard with consistent blue color scheme
   const quickActions = [
     { name: 'Create Quote', path: '/dashboard/quotes', icon: FileText, color: 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300' },
-    { name: 'New Policy', path: '/dashboard/policies', icon: Shield, color: 'bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-300' },
-    { name: 'Add Product', path: '/dashboard/products/create', icon: Package, color: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300' },
-    { name: 'Manage Users', path: '/dashboard/users', icon: Users, color: 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300' }
+    { name: 'New Policy', path: '/dashboard/policies', icon: Shield, color: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300' },
+    { name: 'Add Product', path: '/dashboard/products/create', icon: Package, color: 'bg-blue-50 text-blue-500 dark:bg-blue-900/30 dark:text-blue-300' },
+    { name: 'Manage Users', path: '/dashboard/users', icon: Users, color: 'bg-indigo-50 text-indigo-500 dark:bg-indigo-900/30 dark:text-indigo-300' }
   ];
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section with Gradient Background */}
+      {/* Welcome Section with Professional Blue Gradient Background */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-8"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 p-8"
       >
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/10 backdrop-blur-sm"></div>
         <div className="relative z-10">
@@ -139,7 +139,7 @@ export default function DashboardPage() {
               className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20"
             >
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-indigo-500/20 mr-4">
+                <div className="p-3 rounded-full bg-blue-500/20 mr-4">
                   <Zap className="h-6 w-6 text-white" />
                 </div>
                 <div>
@@ -154,7 +154,7 @@ export default function DashboardPage() {
               className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20"
             >
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-purple-500/20 mr-4">
+                <div className="p-3 rounded-full bg-blue-400/20 mr-4">
                   <TrendingUp className="h-6 w-6 text-white" />
                 </div>
                 <div>
@@ -169,7 +169,7 @@ export default function DashboardPage() {
               className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20"
             >
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-pink-500/20 mr-4">
+                <div className="p-3 rounded-full bg-indigo-500/20 mr-4">
                   <Clock className="h-6 w-6 text-white" />
                 </div>
                 <div>

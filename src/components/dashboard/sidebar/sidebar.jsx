@@ -76,7 +76,7 @@ export default function Sidebar({
         {/* Sidebar Header */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white mr-3">
+            <div className="h-9 w-9 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center text-white mr-3">
               <span className="font-bold text-lg">A</span>
             </div>
             <motion.span 

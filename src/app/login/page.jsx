@@ -36,7 +36,7 @@ export default function LoginPage() {
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 p-12 text-white relative overflow-hidden"
+        className="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-12 text-white relative overflow-hidden"
       >
         {/* Background decorative elements */}
         <div className="absolute top-0 left-0 w-full h-full">
@@ -83,7 +83,7 @@ export default function LoginPage() {
       >
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
-            <div className="h-16 w-16 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white mx-auto mb-4 shadow-lg">
+            <div className="h-16 w-16 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center text-white mx-auto mb-4 shadow-lg">
               <span className="font-bold text-2xl">A</span>
             </div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back</h2>
@@ -151,7 +151,7 @@ export default function LoginPage() {
               type="submit"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className={`w-full flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md ${
+              className={`w-full flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md ${
                 isLoading ? 'opacity-90' : 'opacity-100'
               }`}
               disabled={isLoading}

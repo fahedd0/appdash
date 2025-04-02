@@ -124,7 +124,7 @@ export default function Header({ isMobile, setMobileMenuOpen }) {
             whileHover={{ scale: 1.02 }}
           >
             <div className="flex items-center">
-              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white mr-2 shadow-md">
+              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white mr-2 shadow-md">
                 {user.email?.[0]?.toUpperCase() || 'A'}
               </div>
               <div className="hidden md:block">

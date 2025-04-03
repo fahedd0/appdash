@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
-import Header from '@/components/dashboard/header';
+import NewHeader from '@/components/dashboard/header'; // Import our new header
 
 export default function DashboardLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -65,8 +65,8 @@ export default function DashboardLayout({ children }) {
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
-        {/* Header */}
-        <Header 
+        {/* Use our new header component */}
+        <NewHeader 
           isMobile={isMobile} 
           setMobileMenuOpen={setMobileMenuOpen}
         />

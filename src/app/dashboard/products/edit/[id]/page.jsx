@@ -1,13 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/toast';
+import { motion } from 'framer-motion';
 
-export default function CreateProductPage() {
+export default function EditProductPage({ params }) {
   const router = useRouter();
   const { addToast } = useToast();
+  const productId = params?.id;
   
   // Define form state
   const [formData, setFormData] = useState({
@@ -48,6 +50,48 @@ export default function CreateProductPage() {
     medicalFormMember: null,
   });
   
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  
+  // Load product data when component mounts
+  useEffect(() => {
+    if (!productId) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
+    
+    // Get products from localStorage
+    try {
+      const savedProducts = localStorage.getItem('products');
+      if (savedProducts) {
+        const products = JSON.parse(savedProducts);
+        const product = products.find(p => p.id.toString() === productId.toString());
+        
+        if (product) {
+          // Convert any potential nulls or undefined values to empty strings
+          const cleanProduct = Object.fromEntries(
+            Object.entries(product).map(([key, value]) => [
+              key, 
+              value === null || value === undefined ? '' : value
+            ])
+          );
+          
+          setFormData(cleanProduct);
+        } else {
+          setNotFound(true);
+        }
+      } else {
+        setNotFound(true);
+      }
+    } catch (error) {
+      console.error('Error loading product:', error);
+      addToast('Failed to load product data', 'error');
+    }
+    
+    setLoading(false);
+  }, [productId, addToast]);
+  
   // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -71,7 +115,7 @@ export default function CreateProductPage() {
   };
   
   // Handle form submission
-  const handleSubmit = (e, createAnother = false) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     // Basic validation
@@ -80,79 +124,40 @@ export default function CreateProductPage() {
       return;
     }
     
-    // Generate a unique ID for the product
-    const newProduct = {
-      id: Date.now(),
-      name: formData.name,
-      category: formData.category,
-      status: formData.isDisabled ? 'Inactive' : 'Active',
-      premium: parseFloat(formData.annualLimit) || Math.floor(Math.random() * 3000) + 500,
-      sales: 0,
-      createdAt: new Date().toISOString(),
-      ...formData
-    };
-    
-    // Get existing products from localStorage
-    let products = [];
+    // Update product in localStorage
     try {
       const savedProducts = localStorage.getItem('products');
       if (savedProducts) {
-        products = JSON.parse(savedProducts);
+        let products = JSON.parse(savedProducts);
+        
+        // Find the product and update it
+        const updatedProducts = products.map(product => {
+          if (product.id.toString() === productId.toString()) {
+            // Preserve the original id, sales, and creation date
+            return {
+              ...formData,
+              id: product.id,
+              sales: product.sales || 0,
+              createdAt: product.createdAt,
+              updatedAt: new Date().toISOString(),
+              status: formData.isDisabled ? 'Inactive' : 'Active'
+            };
+          }
+          return product;
+        });
+        
+        // Save back to localStorage
+        localStorage.setItem('products', JSON.stringify(updatedProducts));
+        
+        // Show success message
+        addToast(`Product "${formData.name}" updated successfully`, 'success');
+        
+        // Redirect to products list
+        router.push('/dashboard/products');
       }
     } catch (error) {
-      console.error('Error parsing products from localStorage:', error);
-    }
-    
-    // Add new product
-    products.push(newProduct);
-    
-    // Save to localStorage
-    localStorage.setItem('products', JSON.stringify(products));
-    
-    // Show success message
-    addToast(`Product "${formData.name}" created successfully`, 'success');
-    
-    // Redirect or reset form
-    if (createAnother) {
-      // Reset form for a new product
-      setFormData({
-        name: '',
-        code: '',
-        policyNo: '',
-        category: '',
-        administrator: '',
-        coverageArea: '',
-        sponsorTypes: '',
-        certificateType: '',
-        maxAge: '',
-        annualLimit: '',
-        coInsuranceInPatient: '',
-        coInsuranceOutPatient: '',
-        coInsuranceDiagnosis: '',
-        coInsuranceMedicine: '',
-        pharmacyLimit: '',
-        chronicLimit: '',
-        chronicCoInsurance: '',
-        roomType: '',
-        specialConditions: '',
-        requireMedicalFormSponsor: false,
-        requireMedicalFormMember: false,
-        sellViaCash: false,
-        requireKYC: false,
-        allowBulkMemberImport: false,
-        pushToICP: false,
-        notifyQuoteCreation: false,
-        isDisabled: false,
-        enableCommission: false,
-        enableOCR: false,
-        network: '',
-        tableOfBenefits: null,
-        medicalFormSponsor: null,
-        medicalFormMember: null,
-      });
-    } else {
-      // Redirect to products list
-      router.push('/dashboard/products');
+      console.error('Error updating product:', error);
+      addToast('Failed to update product', 'error');
     }
   };
   
@@ -160,6 +165,32 @@ export default function CreateProductPage() {
   const sectionClasses = "bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 border border-gray-300 dark:border-gray-700";
   const inputClasses = "w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500";
   const labelClasses = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2";
+  
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+      </div>
+    );
+  }
+  
+  // Show not found state
+  if (notFound) {
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 border border-gray-200 dark:border-gray-700 text-center">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Product Not Found</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
+          The product you're looking for doesn't exist or has been deleted.
+        </p>
+        <Link href="/dashboard/products">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+            Return to Products
+          </button>
+        </Link>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-8">
@@ -170,9 +201,9 @@ export default function CreateProductPage() {
         </Link>
       </div>
 
-      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Create Product</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Edit Product: {formData.name}</h2>
 
-      <form onSubmit={(e) => handleSubmit(e, false)}>
+      <form onSubmit={handleSubmit}>
         {/* Base Information */}
         <section className={`${sectionClasses} mb-8`}>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-6">Base Information</h3>
@@ -438,7 +469,7 @@ export default function CreateProductPage() {
                 <input 
                   type="checkbox" 
                   name={checkbox.name}
-                  checked={formData[checkbox.name]}
+                  checked={formData[checkbox.name] || false}
                   onChange={handleChange}
                   className="accent-blue-600" 
                 />
@@ -480,6 +511,9 @@ export default function CreateProductPage() {
                   onChange={handleChange}
                   className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-white dark:text-gray-200" 
                 />
+                {formData[attachment.name] && typeof formData[attachment.name] === 'string' && (
+                  <p className="mt-1 text-sm text-gray-500">Current file: {formData[attachment.name]}</p>
+                )}
               </div>
             ))}
           </div>
@@ -487,26 +521,23 @@ export default function CreateProductPage() {
 
         {/* Footer Actions */}
         <div className="flex gap-4">
-          <button 
+          <motion.button 
             type="submit"
             className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            Create
-          </button>
-          <button 
-            type="button"
-            onClick={(e) => handleSubmit(e, true)}
-            className="px-5 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
-          >
-            Create & Create Another
-          </button>
+            Save Changes
+          </motion.button>
           <Link href="/dashboard/products">
-            <button 
+            <motion.button 
               type="button"
-              className="px-5 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition"
+              className="px-5 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
             >
               Cancel
-            </button>
+            </motion.button>
           </Link>
         </div>
       </form>

@@ -91,9 +91,9 @@ export default function NewHeader({ isMobile, setMobileMenuOpen }) {
   
   // Sample messages data
   const messages = [
-    { id: 1, sender: 'Jane Cooper', content: 'Hi, I need help with my policy', time: '10:45 AM', avatar: 'J' },
-    { id: 2, sender: 'Wade Warren', content: 'Thank you for your assistance', time: 'Yesterday', avatar: 'W' },
-    { id: 3, sender: 'Leslie Alexander', content: 'Can you update my details?', time: 'Yesterday', avatar: 'L' },
+    { id: 1, sender: 'User1', content: 'Hi, I need help with my policy', time: '10:45 AM', avatar: 'J' },
+    { id: 2, sender: 'User2', content: 'Thank you for your assistance', time: 'Yesterday', avatar: 'W' },
+    { id: 3, sender: 'User3', content: 'Can you update my details?', time: 'Yesterday', avatar: 'L' },
   ];
   
   // Sample calendar events for today

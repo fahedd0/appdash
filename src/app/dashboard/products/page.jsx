@@ -1,30 +1,70 @@
-// src/app/dashboard/products/page.jsx
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
-import { Edit, Trash2, Eye, Plus } from 'lucide-react';
+import { Edit, Trash2, Eye, Plus, RefreshCcw } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { useModal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
+import { motion } from 'framer-motion';
 
 export default function ProductsPage() {
   const { openModal } = useModal();
   const { addToast } = useToast();
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Mock products data
-  const products = [
-    { id: 1, name: 'Auto Insurance Pro', category: 'Auto', status: 'Active', premium: 1200, sales: 256 },
-    { id: 2, name: 'Home Protection Plus', category: 'Home', status: 'Active', premium: 950, sales: 189 },
-    { id: 3, name: 'Health Care Premier', category: 'Health', status: 'Pending', premium: 2100, sales: 134 },
-    { id: 4, name: 'Life Security Max', category: 'Life', status: 'Active', premium: 850, sales: 212 },
-    { id: 5, name: 'Travel Essentials', category: 'Travel', status: 'Inactive', premium: 350, sales: 78 },
-    { id: 6, name: 'Business Liability Pro', category: 'Business', status: 'Active', premium: 3200, sales: 97 },
-    { id: 7, name: 'Pet Cover Plus', category: 'Pet', status: 'Pending', premium: 450, sales: 124 },
-    { id: 8, name: 'Auto Basic', category: 'Auto', status: 'Active', premium: 800, sales: 187 },
-    { id: 9, name: 'Home Essential', category: 'Home', status: 'Inactive', premium: 650, sales: 93 },
-    { id: 10, name: 'Health Basic', category: 'Health', status: 'Active', premium: 1500, sales: 156 },
-  ];
+  // Load products from localStorage on component mount
+  useEffect(() => {
+    loadProducts();
+  }, []);
+  
+  // Function to load products from localStorage
+  const loadProducts = () => {
+    setIsLoading(true);
+    
+    // Default mock products if nothing in localStorage
+    const mockProducts = [
+      { id: 1, name: 'Auto Insurance Pro', category: 'Auto', status: 'Active', premium: 1200, sales: 256 },
+      { id: 2, name: 'Home Protection Plus', category: 'Home', status: 'Active', premium: 950, sales: 189 },
+      { id: 3, name: 'Health Care Premier', category: 'Health', status: 'Pending', premium: 2100, sales: 134 },
+      { id: 4, name: 'Life Security Max', category: 'Life', status: 'Active', premium: 850, sales: 212 },
+      { id: 5, name: 'Travel Essentials', category: 'Travel', status: 'Inactive', premium: 350, sales: 78 },
+    ];
+    
+    // Load products from local storage
+    setTimeout(() => {
+      try {
+        const savedProducts = localStorage.getItem('products');
+        if (savedProducts) {
+          const parsedProducts = JSON.parse(savedProducts);
+          setProducts(parsedProducts);
+        } else {
+          // If no products in localStorage, set mock data
+          setProducts(mockProducts);
+          localStorage.setItem('products', JSON.stringify(mockProducts));
+        }
+      } catch (error) {
+        console.error('Error loading products:', error);
+        setProducts(mockProducts);
+      }
+      
+      setIsLoading(false);
+    }, 500); // Simulated loading delay
+  };
+  
+  // Delete a product
+  const deleteProduct = (productId) => {
+    try {
+      const updatedProducts = products.filter(product => product.id !== productId);
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+      setProducts(updatedProducts);
+      addToast('Product deleted successfully', 'success');
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      addToast('Failed to delete product', 'error');
+    }
+  };
   
   // Table columns definition
   const columns = [
@@ -42,13 +82,13 @@ export default function ProductsPage() {
       key: 'premium', 
       header: 'Premium', 
       sortable: true,
-      render: (row) => `$${row.premium.toLocaleString()}`
+      render: (row) => `$${row.premium?.toLocaleString() || '0'}`
     },
     { 
       key: 'sales', 
       header: 'Sales', 
       sortable: true,
-      render: (row) => row.sales.toLocaleString()
+      render: (row) => row.sales?.toLocaleString() || '0'
     },
     { 
       key: 'status', 
@@ -121,17 +161,34 @@ export default function ProductsPage() {
             </div>
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Premium</p>
-              <p>${product.premium.toLocaleString()}</p>
+              <p>${product.premium?.toLocaleString() || '0'}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Sales</p>
-              <p>{product.sales.toLocaleString()}</p>
+              <p>{product.sales?.toLocaleString() || '0'}</p>
             </div>
           </div>
-          <div className="mt-6">
-            <p className="text-sm text-gray-500 dark:text-gray-400">Description</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur.</p>
-          </div>
+          
+          {product.roomType && (
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Room Type</p>
+              <p>{product.roomType}</p>
+            </div>
+          )}
+          
+          {product.specialConditions && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400">Special Conditions</p>
+              <p>{product.specialConditions}</p>
+            </div>
+          )}
+          
+          {product.createdAt && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400">Created At</p>
+              <p>{new Date(product.createdAt).toLocaleString()}</p>
+            </div>
+          )}
         </div>
       </div>,
       { title: 'Product Details' }
@@ -158,8 +215,7 @@ export default function ProductsPage() {
             </button>
             <button 
               onClick={() => {
-                // Delete logic would go here
-                addToast(`${product.name} has been deleted`, 'success');
+                deleteProduct(product.id);
                 onClose();
               }} 
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
@@ -182,12 +238,27 @@ export default function ProductsPage() {
             Manage your product catalog and offerings here.
           </p>
         </div>
-        <Link href="/dashboard/products/create">
-          <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-            <Plus size={16} className="mr-2" />
-            New Product
-          </button>
-        </Link>
+        <div className="flex space-x-2">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={loadProducts}
+            className="flex items-center px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          >
+            <RefreshCcw size={16} className="mr-1" />
+            Refresh
+          </motion.button>
+          <Link href="/dashboard/products/create">
+            <motion.button 
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              <Plus size={16} className="mr-2" />
+              New Product
+            </motion.button>
+          </Link>
+        </div>
       </div>
 
       {/* Product table */}
@@ -199,6 +270,8 @@ export default function ProductsPage() {
         searchPlaceholder="Search products..."
         pagination={true}
         onRowClick={handleView}
+        loadingState={isLoading}
+        emptyMessage="No products found. Click 'New Product' to create one."
       />
     </div>
   );

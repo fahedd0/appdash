@@ -51,7 +51,8 @@ export default function Sidebar({
       <motion.aside 
         variants={sidebarVariants}
         animate={collapsed && !mobileMenuOpen && !isMobile ? 'collapsed' : 'expanded'}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        transition={{ type: "tween", duration: 0.05, ease: "easeInOut" }}
+
         className={`
           ${isMobile ? 'fixed z-30 h-full' : 'relative'} 
           ${mobileMenuOpen ? 'translate-x-0' : isMobile ? '-translate-x-full' : ''} 

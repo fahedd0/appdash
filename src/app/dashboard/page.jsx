@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { LineChart, BarChart, AreaChart, PieChart } from '@/components/ui/charts';
 import { useRouter } from 'next/navigation';
 import { 
-  BarChart3, LineChart, Users, DollarSign, ArrowUp, 
+  BarChart3, LineChart as LineChartIcon, Users, DollarSign, ArrowUp, 
   ArrowDown, Activity, Zap, Clock, TrendingUp,
   Shield, FileText, CreditCard, CheckCircle, Package
 } from 'lucide-react';
@@ -57,7 +58,7 @@ export default function DashboardPage() {
       value: "1,352",
       change: "+3.4%",
       trend: "up",
-      icon: LineChart,
+      icon: LineChartIcon,
       gradient: "from-blue-500 to-indigo-600",
       shadowColor: "shadow-blue-200 dark:shadow-blue-900/30"
     },
@@ -103,6 +104,64 @@ export default function DashboardPage() {
       icon: CheckCircle
     }
   ];
+
+  const salesData = [
+    { month: 'Jan', revenue: 8500, profit: 3200, leads: 230 },
+    { month: 'Feb', revenue: 9200, profit: 3800, leads: 250 },
+    { month: 'Mar', revenue: 8900, profit: 3600, leads: 255 },
+    { month: 'Apr', revenue: 10500, profit: 4200, leads: 290 },
+    { month: 'May', revenue: 11800, profit: 4900, leads: 310 },
+    { month: 'Jun', revenue: 10900, profit: 4600, leads: 285 },
+  ];
+  
+  const productData = [
+    { name: 'Auto Insurance', value: 35 },
+    { name: 'Home Insurance', value: 25 },
+    { name: 'Health Insurance', value: 20 },
+    { name: 'Life Insurance', value: 15 },
+    { name: 'Travel Insurance', value: 5 },
+  ];
+  
+  // Add this to your JSX where you want to display charts
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+    <LineChart
+      data={salesData}
+      xKey="month"
+      yKey={['revenue', 'profit']}
+      title="Revenue & Profit"
+      subtitle="Monthly analysis"
+      color="blue"
+    />
+    
+    <BarChart
+      data={salesData}
+      xKey="month"
+      yKey="leads"
+      title="New Leads"
+      subtitle="Monthly lead generation"
+      color="green"
+    />
+    
+    <AreaChart
+      data={salesData.slice().reverse()}
+      xKey="month"
+      yKey={['revenue', 'profit']}
+      title="Performance Trend"
+      subtitle="Last 6 months"
+      color="purple"
+      stacked={true}
+    />
+    
+    <PieChart
+      data={productData}
+      nameKey="name"
+      valueKey="value"
+      title="Product Distribution"
+      subtitle="By percentage"
+      color="default"
+      innerRadius={60}
+    />
+  </div>
 
   // Quick actions for the dashboard with consistent blue color scheme
   const quickActions = [

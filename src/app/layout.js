@@ -1,4 +1,7 @@
+// src/app/layout.js
 import './globals.css';
+import { ToastProvider } from '@/components/ui/toast';
+import { ModalProvider } from '@/components/ui/modal';
 
 export const metadata = {
   title: 'Modern Dashboard',
@@ -9,7 +12,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
-        {children}
+        <ToastProvider>
+          <ModalProvider>
+            {children}
+          </ModalProvider>
+        </ToastProvider>
       </body>
     </html>
   );
